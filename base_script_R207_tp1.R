@@ -138,6 +138,9 @@ produitDeDeuxMatricesBooleennes <- function(matriceBoolenneA, matriceBoolenneB){
 
 library(igraph)
 
+##########################################################################
+############################### Exercice 1  ##############################
+##########################################################################
 # (a) Création du graphe
 # Liste d'arêtes
 edges <- c("Alice", "Bob", "Alice", "Claire", "Alice", "David",
@@ -186,3 +189,46 @@ mean(degree(g5))
 # (e) Suppression des relations d'Alice
 g6 <- delete_edges(g5, c("Alice|Bob", "Alice|Claire"))
 plot(g6)
+
+
+##########################################################################
+############################### Exercice 2  ##############################
+##########################################################################
+#a)
+adj_matrix <- matrix(c(0, 1, 0, 1, 0,
+                       1, 0, 1, 1, 1,
+                       0, 1, 0, 1, 1,
+                       1, 0, 0, 0, 0,
+                       0, 1, 1, 0, 0), nrow = 5, byrow = TRUE)
+g7 <- graph_from_adjacency_matrix(adj_matrix, mode = "directed",
+                                  vertices = c("Emma", "Sophie", "Lucas",
+                                               "Thomas", "Léa"))
+plot(g7)
+
+#b)
+# (b) Degré entrant et sortant
+degree(g7, mode = "in")
+degree(g7, mode = "out")
+
+# (c) Matrice d'adjacence et calculs
+adj_matrix <- as_adjacency_matrix(g7)
+dext <- adj_matrix %*% matrix(1, nrow = vcount(g7))
+dint <- matrix(1, nrow = 1, ncol = vcount(g7)) %*% adj_matrix
+d <- dext + dint
+
+# (d) Excentricités
+eccentricity(g7)
+
+# (e) Centre, rayon et diamètre
+centrality <- which(eccentricity(g7) == min(eccentricity(g7)))
+rayon <- min(eccentricity(g7))
+diametre <- max(eccentricity(g7))
+
+# (f) Ajout de Marine
+g <- add_vertices(g7, 1, name = "Marine")
+g <- add_edges(g7, c("Marine", "Léa", "Marine", "Emma", "Marine",
+                    "Sophie", "Lucas", "Marine", "Thomas", "Marine"))
+eccentricity(g7)
+centrality_marine <- which(eccentricity(g7) == min(eccentricity(g7)))
+rayon_marine <- min(eccentricity(g7))
+diametre_marine <- max(eccentricity(g7))
